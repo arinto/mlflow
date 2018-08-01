@@ -43,7 +43,7 @@ def serve():
     return send_from_directory(STATIC_DIR, 'index.html')
 
 
-def _run_server(file_store_path, default_artifact_root, host, port, workers, static_prefix):
+def _run_server(file_store_path, default_artifact_root, host, port, workers, static_prefix, log_level):
     """
     Run the MLflow server, wrapping it in gunicorn
     :param static_prefix: If set, the index.html asset will be served from the path static_prefix.
@@ -58,5 +58,5 @@ def _run_server(file_store_path, default_artifact_root, host, port, workers, sta
     if static_prefix:
         env_map[STATIC_PREFIX_ENV_VAR] = static_prefix
     bind_address = "%s:%s" % (host, port)
-    exec_cmd(["gunicorn", "-b", bind_address, "-w", "%s" % workers, "mlflow.server:app"],
+    exec_cmd(["gunicorn", "-b", bind_address, "-w", "%s" % workers, "--log-level","%s" % log_level, "mlflow.server:app"],
              env=env_map, stream_output=True)

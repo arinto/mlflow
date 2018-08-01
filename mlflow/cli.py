@@ -175,7 +175,8 @@ def _validate_static_prefix(ctx, param, value):  # pylint: disable=unused-argume
               help="Number of gunicorn worker processes to handle requests (default: 4).")
 @click.option("--static-prefix", default=None, callback=_validate_static_prefix,
               help="A prefix which will be prepended to the path of all static paths.")
-def server(file_store, default_artifact_root, host, port, workers, static_prefix):
+@click.option("--log-level", default="info", help="The log level of mlflow server")
+def server(file_store, default_artifact_root, host, port, workers, static_prefix, log_level):
     """
     Run the MLflow tracking server.
 
@@ -184,7 +185,7 @@ def server(file_store, default_artifact_root, host, port, workers, static_prefix
     pass --host 0.0.0.0 to listen on all network interfaces (or a specific interface address).
     """
     try:
-        _run_server(file_store, default_artifact_root, host, port, workers, static_prefix)
+        _run_server(file_store, default_artifact_root, host, port, workers, static_prefix, log_level)
     except ShellCommandException:
         print("Running the mlflow server failed. Please see the logs above for details.",
               file=sys.stderr)
